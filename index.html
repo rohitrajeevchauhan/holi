@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Holi Fun 😜🌈</title>
+<style>
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: 'Comic Sans MS', cursive;
+  background: linear-gradient(45deg, #ff758c, #ff7eb3, #65c7f7, #9cecfb);
+  background-size: 400% 400%;
+  animation: bgMove 8s infinite alternate;
+}
+@keyframes bgMove {0%{background-position:left;}100%{background-position:right;}}
+
+/* SLIDER */
+.container {display:flex;width:600%;height:100vh;transition: transform 1s ease-in-out;}
+.slide {width:100vw;height:100vh;flex-shrink:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;color:white;padding:20px;position:relative;}
+
+/* CHARACTER ANIMATION */
+.character {font-size:90px; animation: shake 1.5s infinite;}
+@keyframes shake {0%,100%{transform:rotate(0deg);}25%{transform:rotate(10deg);}75%{transform:rotate(-10deg);}}
+
+/* FLOATING EMOJIS */
+.emoji {position:absolute; font-size:28px; animation: float 6s linear infinite;}
+@keyframes float {0%{transform:translateY(100vh) rotate(0deg);}100%{transform:translateY(-100vh) rotate(360deg);}}
+
+/* BUTTONS */
+button {padding:12px 24px;font-size:16px;border:none;border-radius:25px;background:white;color:#ff4081;cursor:pointer;margin:10px;transition:0.3s;}
+button:hover{transform:scale(1.1);background:yellow;}
+#noBtn,#noBunk,#noBtnApology{position:absolute;}
+
+/* COLOR SPLASH */
+.splash {position:absolute;width:50px;height:50px;border-radius:50%;animation:splashAnim 1s ease-out forwards;}
+@keyframes splashAnim{0%{transform:scale(0);opacity:1;}100%{transform:scale(3);opacity:0;}}
+
+/* CONFETTI */
+.confetti {position:absolute;width:8px;height:8px;animation:fall 3s linear infinite;}
+@keyframes fall{0%{transform:translateY(-100vh) rotate(0deg);}100%{transform:translateY(100vh) rotate(360deg);}}
+
+/* GLOW */
+.glow{font-size:22px; animation: glow 2s infinite alternate;}
+
+/* MOOD METER */
+#moodContainer{width:250px;height:20px;border:2px solid white;border-radius:10px;margin-top:20px;}
+#moodBar{width:0%;height:100%;background:yellow;border-radius:10px;transition:width 0.3s;}
+#moodEmoji{font-size:28px;margin-top:10px;}
+
+/* BOUNCE */
+@keyframes bounce {0%,100%{transform:translateY(0);}50%{transform:translateY(-15px);}}
+</style>
+</head>
+<body>
+
+<div class="container" id="slider">
+
+  <!-- Slide 1: Holi Intro -->
+  <div class="slide">
+    <h1>🌈 Happy Holi 😜</h1>
+    <div class="character">🎨😂</div>
+    <p>Let’s sprinkle colors and smiles everywhere ✨</p>
+  </div>
+
+  <!-- Slide 2: Color Click Game -->
+  <div class="slide">
+    <h2>Click anywhere to throw colors! 🎯</h2>
+    <div class="character">💥🌈</div>
+    <div id="moodContainer"><div id="moodBar"></div></div>
+    <div id="moodEmoji">😒</div>
+    <p>Fill the fun meter to unlock the surprise!</p>
+  </div>
+
+  <!-- Slide 3: Apology Slide (Interactive) -->
+  <div class="slide">
+    <h1 style="animation:bounce 1.5s infinite;">Shreya 😌</h1>
+    <p class="glow" style="font-size:20px; max-width:600px; line-height:1.6; text-align:center; border:2px solid rgba(255,255,255,0.6); padding:20px; border-radius:15px; background:rgba(0,0,0,0.2);">
+      I realize that the misunderstanding between us happened because of other people, and I feel truly sorry for any hurt it caused you.<br><br>
+      Please know that it was never my intention to upset you.<br><br>
+      From the bottom of my heart, I sincerely apologize 💛.<br><br>
+      I hope we can move past this and enjoy many more fun moments together 🌸✨.
+    </p>
+    <button onclick="apologyYes()" style="font-size:18px; padding:14px 28px;">Yes 😇</button>
+    <button id="noBtnApology" onmouseover="moveNoApology()" style="font-size:18px; padding:14px 28px;">No 😜</button>
+  </div>
+
+  <!-- Slide 4: Celebration -->
+  <div class="slide">
+    <h1>🎉 Congrats! 🎉</h1>
+    <p>You're officially a color ninja 🌈😂</p>
+    <div class="character">🤩💥</div>
+    <button onclick="nextSlide()">Next ➡️</button>
+  </div>
+
+  <!-- Slide 5: Bunk College Full Day (Playful) -->
+  <div class="slide">
+    <h1 style="animation:bounce 1.5s infinite;">Before we finish… 😏</h1>
+    <p style="animation:bounce 1.5s infinite; font-size:22px;">Wanna bunk college for a full day? 🎉</p>
+    <button onclick="bunkYes()" style="font-size:18px; padding:14px 28px;">Yes ✅</button>
+    <button id="noBunk" onmouseover="moveBunkNo()" style="font-size:18px; padding:14px 28px;">No ❌</button>
+  </div>
+
+</div>
+
+<script>
+let current = 0;
+const slider = document.getElementById("slider");
+
+/* AUTO SLIDE ONLY FOR INTRO */
+setTimeout(() => {
+  current++;
+  slider.style.transform = `translateX(-${current*100}vw)`;
+}, 7000);
+
+/* FLOATING EMOJIS */
+const emojis=["🌈","😂","🎨","✨","🙃","💥","🌸"];
+for(let i=0;i<30;i++){
+  let e=document.createElement("div");
+  e.className="emoji";
+  e.innerHTML=emojis[Math.floor(Math.random()*emojis.length)];
+  e.style.left=Math.random()*100+"vw";
+  e.style.animationDuration=(Math.random()*5+3)+"s";
+  document.body.appendChild(e);
+}
+
+/* COLOR GAME */
+let mood = 0;
+document.addEventListener("click", function(e){
+  if(current!==1) return;
+  let splash=document.createElement("div");
+  splash.className="splash";
+  splash.style.left=e.pageX-25+"px";
+  splash.style.top=e.pageY-25+"px";
+  splash.style.background=`hsl(${Math.random()*360},100%,50%)`;
+  document.body.appendChild(splash);
+
+  mood += 5;
+  if(mood>100)mood=100;
+  document.getElementById("moodBar").style.width=mood+"%";
+
+  let emoji=document.getElementById("moodEmoji");
+  if(mood<25) emoji.innerHTML="😒";
+  else if(mood<50) emoji.innerHTML="🙂";
+  else if(mood<75) emoji.innerHTML="😄";
+  else emoji.innerHTML="🤩";
+
+  if(Math.random()<0.2) alert("Whoa! Too much color! 😂");
+
+  if(mood===100){
+    current=3;
+    slider.style.transform=`translateX(-${current*100}vw)`;
+    apologyYes(); // trigger sparkle if color meter hits 100
+  }
+});
+
+/* MANUAL NEXT SLIDE */
+function nextSlide(){
+  current++;
+  if(current > 4) current = 4;
+  slider.style.transform = `translateX(-${current*100}vw)`;
+}
+
+/* RUNNING NO BUTTONS */
+function moveNoApology(){
+  const btn=document.getElementById("noBtnApology");
+  btn.style.top=Math.random()*60+"%";
+  btn.style.left=Math.random()*60+"%";
+}
+function moveNo(){
+  const btn=document.getElementById("noBtn");
+  btn.style.top=Math.random()*60+"%";
+  btn.style.left=Math.random()*60+"%";
+}
+function moveBunkNo(){
+  const btn=document.getElementById("noBunk");
+  btn.style.top=Math.random()*60+"%";
+  btn.style.left=Math.random()*60+"%";
+}
+
+/* YES BUTTON SPARKLE / CONFETTI */
+function apologyYes(){
+  for(let i=0;i<80;i++){
+    let conf=document.createElement("div");
+    conf.className="confetti";
+    conf.style.left=Math.random()*100+"vw";
+    conf.style.background=`hsl(${Math.random()*360},100%,50%)`;
+    conf.style.animationDuration=(Math.random()*3+2)+"s";
+    document.body.appendChild(conf);
+  }
+  alert("Thank you for accepting my apology! 💛✨");
+}
+
+/* BUNK YES */
+function bunkYes(){
+  alert("Yay! Full day rebel unlocked 🌈😂");
+  for(let i=0;i<80;i++){
+    let conf=document.createElement("div");
+    conf.className="confetti";
+    conf.style.left=Math.random()*100+"vw";
+    conf.style.background=`hsl(${Math.random()*360},100%,50%)`;
+    conf.style.animationDuration=(Math.random()*3+2)+"s";S
+    document.body.appendChild(conf);
+  }
+}
+</script>
+
+</body>
+</html>
